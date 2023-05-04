@@ -1,0 +1,83 @@
+version: '3.5'
+
+services:
+    second-light-login-server:
+        build:
+            context: ./backend/login-server
+            dockerfile: ./Dockerfile
+        container_name: second-light-login-server
+        ports:
+            - 5001:80
+        environment:
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+            GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+
+    second-light-storage-server:
+        build:
+            context: ./backend/storage-server
+            dockerfile: ./Dockerfile
+        container_name: second-light-storage-server
+        ports:
+            - 5002:80
+        environment:
+            STORAGE_DATABASE_ROOT_USERNAME: ${STORAGE_DATABASE_ROOT_USERNAME}
+            STORAGE_DATABASE_ROOT_PASSWORD: ${STORAGE_DATABASE_ROOT_PASSWORD}
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+
+    second-light-website:
+        build:
+            context: ./frontend/website
+            dockerfile: ./Dockerfile
+        container_name: second-light-website
+        ports:
+            - 8080:8080
+
+    second-light-storage-database:
+        image: mongo
+        container_name: second-light-storage-database
+        restart: always
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${STORAGE_DATABASE_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${STORAGE_DATABASE_ROOT_PASSWORD}
+
+    second-light-mongo-express:
+        image: mongo-express
+        container_name: second-light-mongo-express
+        restart: always
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: ${STORAGE_DATABASE_ROOT_USERNAME}
+            ME_CONFIG_MONGODB_ADMINPASSWORD: ${STORAGE_DATABASE_ROOT_PASSWORD}
+            ME_CONFIG_MONGODB_URL: mongodb://${STORAGE_DATABASE_ROOT_USERNAME}:${STORAGE_DATABASE_ROOT_PASSWORD}@second-light-storage-database:27017/
+
+    second-light-supertokens-core:
+        image: registry.supertokens.io/supertokens/supertokens-postgresql
+        container_name: second-light-supertokens-core
+        ports:
+            - 3567:3567
+        environment:
+            POSTGRESQL_CONNECTION_URI: postgresql://${LOGIN_DATABASE_ROOT_USERNAME}:${LOGIN_DATABASE_ROOT_PASSWORD}@second-light-login-database:5432/supertokens
+
+    second-light-login-database:
+        image: postgres
+        container_name: second-light-login-database
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: ${LOGIN_DATABASE_ROOT_USERNAME}
+            POSTGRES_PASSWORD: ${LOGIN_DATABASE_ROOT_PASSWORD}
+            POSTGRES_DB: supertokens
+
+    second-light-adminer:
+        image: adminer
+        container_name: second-light-adminer
+        restart: always
+        ports:
+            - 8082:8080

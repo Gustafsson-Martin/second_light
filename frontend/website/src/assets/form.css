@@ -1,0 +1,68 @@
+h3 {
+    padding-top: 1vh;
+    color: yellow;
+    font-size: 2vmin;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+label {
+    font-size: 2vh;
+    position: absolute;
+    left: 27%;
+    color: var(--color-accent-1);
+    visibility: hidden;
+}
+
+input::placeholder {
+    color: var(--color-grey-200);
+}
+
+input {
+    font-size: inherit;
+    background-color: var(--color-grey-500);
+    color: inherit;
+    border: none;
+    outline: none;
+    top: 100%;
+    transform: translateY(-100%);
+    width: 50%;
+    border-radius: 0.5vh;
+    padding: 2vh 1vw 2vh 1vw;
+    border-bottom: 0.5vh solid var(--color-grey-500);
+}
+
+input:focus {
+    background-color: var(--color-accent-1-light);
+    border-bottom: 0.5vh solid var(--color-accent-1);
+}
+
+input:focus + label {
+    visibility: visible;
+}
+
+button {
+    font-size: inherit;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color-accent-1);
+    width: 25%;
+    border-radius: 100px;
+    padding: 2vh 1vw 2vh 1vw;
+    color: black;
+    outline: none;
+    border: none;
+    box-shadow: 0 1.2vh var(--color-grey-800);
+    cursor: pointer;
+}
+
+button:active {
+    transform: translateY(-47%);
+    box-shadow: 0 0.6vh var(--color-grey-900);
+}
+
+button:hover {
+    background-color: var(--color-accent-1-soft);
+}

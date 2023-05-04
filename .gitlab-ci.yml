@@ -1,0 +1,19 @@
+image: node:latest
+
+stages:
+    - build
+    - lint
+
+frontend-build:
+    stage: build
+    script:
+        - cd frontend/website
+        - npm install
+        - npm run build
+
+frontend-lint:
+    stage: lint
+    script:
+        - cd frontend/website
+        - npm install
+        - npm run lint
